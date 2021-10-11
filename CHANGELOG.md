@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Use default-catalog.
+
 ## [0.1.0] - 2021-10-11
 
 [Unreleased]: https://github.com/giantswarm/capi-node-labeler-app/compare/v0.1.0...HEAD

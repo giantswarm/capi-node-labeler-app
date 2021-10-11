@@ -1,6 +1,6 @@
-name: capi-node-labeler-app
+name: capi-node-labeler
 version: [[ .Version ]]
-description: "CAPI node labeler app"
+description: "CAPI node labeler"
 appVersion: "[[ .AppVersion ]]"
 home: "https://github.com/giantswarm/capi-node-labeler-app"
 apiVersion: v1
