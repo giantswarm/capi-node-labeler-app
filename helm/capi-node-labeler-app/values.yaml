@@ -1,0 +1,17 @@
+name: capi-node-labeler-app
+namespace: kube-system
+serviceType: managed
+
+project:
+  branch: "[[ .Branch ]]"
+  commit: "[[ .SHA ]]"
+image:
+  name: "giantswarm/capi-node-labeler-app"
+  tag: "[[ .Version ]]"
+  registry: "docker.io"
+
+pod:
+  user:
+    id: 1000
+  group:
+    id: 1000

@@ -1,0 +1,8 @@
+name: capi-node-labeler-app
+version: [[ .Version ]]
+description: "CAPI node labeler app"
+appVersion: "[[ .AppVersion ]]"
+home: "https://github.com/giantswarm/capi-node-labeler-app"
+apiVersion: v1
+annotations:
+  application.giantswarm.io/team: "firecracker"
