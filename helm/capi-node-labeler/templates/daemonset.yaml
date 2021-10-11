@@ -27,7 +27,6 @@ spec:
           image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
           imagePullPolicy: IfNotPresent
       priorityClassName: system-node-critical
-      restartPolicy: Always
       serviceAccountName: {{ include "resource.default.name" . }}
       terminationGracePeriodSeconds: 0
       tolerations:

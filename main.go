@@ -52,19 +52,19 @@ func init() {
 func main() {
 	nodeName := env.GetString("NODE_NAME", "")
 	if nodeName == "" {
-		fmt.Printf("ERROR: NODE_NAME env cannot be empty")
+		fmt.Printf("ERROR: NODE_NAME env cannot be empty\n")
 		os.Exit(1)
 	}
 
 	config, err := ctrl.GetConfig()
 	if err != nil {
-		fmt.Printf("ERROR: failed to get config for controlelr runtime client")
+		fmt.Printf("ERROR: failed to get config for controlelr runtime client\n")
 		panic(err)
 	}
 
 	ctrlClient, err := client.New(config, client.Options{})
 	if err != nil {
-		fmt.Printf("ERROR: failed to create controller runtime client")
+		fmt.Printf("ERROR: failed to create controller runtime client\n")
 		panic(err)
 	}
 
@@ -73,7 +73,7 @@ func main() {
 
 	err = ctrlClient.Get(ctx, client.ObjectKey{Name: nodeName}, &node)
 	if err != nil {
-		fmt.Printf("ERROR: failed to get node %s", nodeName)
+		fmt.Printf("ERROR: failed to get node %s\n", nodeName)
 		panic(err)
 	}
 
@@ -102,15 +102,20 @@ func main() {
 	if shouldUpdate {
 		err = ctrlClient.Update(ctx, &node)
 		if err != nil {
-			fmt.Printf("ERROR: failed to apply new labels")
+			fmt.Printf("ERROR: failed to apply new labels\n")
 			panic(err)
 		}
-		fmt.Printf("new labels applied to node")
+		fmt.Printf("new labels applied to node\n")
 	} else {
-		fmt.Printf("required labels are already applied")
+		fmt.Printf("required labels are already applied\n")
 	}
 
-	fmt.Printf("capi-node-labeler finished successfully")
+	fmt.Printf("capi-node-labeler finished successfully\n")
+	fmt.Printf("sleeping forever\n")
+
+	select {
+	// sleeping forever
+	}
 }
 
 func hasLabel(labels map[string]string, labelName string) bool {

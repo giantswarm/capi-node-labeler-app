@@ -19,5 +19,5 @@ room for such suffix.
 {{- end -}}
 
 {{- define "resource.default.namespace" -}}
-giantswarm
+kube-system
 {{- end -}}
