@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `kubernetes.io/role` to applied labels.
+
 ## [0.3.2] - 2021-10-11
 
 ### Changed

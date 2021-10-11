@@ -37,6 +37,8 @@ const (
 
 	WorkerNodeRoleLabel   = "node-role.kubernetes.io/worker"
 	LegacyWorkerNodeLabel = "node.kubernetes.io/worker"
+
+	LegacyRoleLabel = "kubernetes.io/role"
 )
 
 var (
@@ -86,7 +88,10 @@ func main() {
 			node.Labels[LegacyMasterNodeLabel] = ""
 			shouldUpdate = true
 		}
-
+		if !hasLabel(node.Labels, LegacyRoleLabel) {
+			node.Labels[LegacyRoleLabel] = "master"
+			shouldUpdate = true
+		}
 	} else {
 		// worker node
 		if !hasLabel(node.Labels, WorkerNodeRoleLabel) {
@@ -95,6 +100,10 @@ func main() {
 		}
 		if !hasLabel(node.Labels, LegacyWorkerNodeLabel) {
 			node.Labels[LegacyWorkerNodeLabel] = ""
+			shouldUpdate = true
+		}
+		if !hasLabel(node.Labels, LegacyRoleLabel) {
+			node.Labels[LegacyRoleLabel] = "worker"
 			shouldUpdate = true
 		}
 	}
