@@ -114,10 +114,6 @@ func main() {
 }
 
 func hasLabel(labels map[string]string, labelName string) bool {
-	for k, _ := range labels {
-		if k == labelName {
-			return true
-		}
-	}
-	return false
+	_, ok := labels[labelName]
+	return ok
 }
