@@ -32,8 +32,9 @@ import (
 )
 
 const (
-	MasterNodeRoleLabel   = "node-role.kubernetes.io/master"
-	LegacyMasterNodeLabel = "node.kubernetes.io/master"
+	ControlPlaneNodeRoleLabel = "node-role.kubernetes.io/control-plane"
+	MasterNodeRoleLabel       = "node-role.kubernetes.io/master"
+	LegacyMasterNodeLabel     = "node.kubernetes.io/master"
 
 	WorkerNodeRoleLabel   = "node-role.kubernetes.io/worker"
 	LegacyWorkerNodeLabel = "node.kubernetes.io/worker"
@@ -82,8 +83,18 @@ func main() {
 	shouldUpdate := false
 	// check if the node is worker or master
 	// master will already have the label set, worker wont
-	if hasLabel(node.Labels, MasterNodeRoleLabel) {
+	if hasLabel(node.Labels, MasterNodeRoleLabel) || hasLabel(node.Labels, ControlPlaneNodeRoleLabel) {
 		// master node
+		if !hasLabel(node.Labels, MasterNodeRoleLabel) {
+			node.Labels[MasterNodeRoleLabel] = ""
+			fmt.Printf("adding label %s=''\n", MasterNodeRoleLabel)
+			shouldUpdate = true
+		}
+		if !hasLabel(node.Labels, ControlPlaneNodeRoleLabel) {
+			node.Labels[ControlPlaneNodeRoleLabel] = ""
+			fmt.Printf("adding label %s=''\n", ControlPlaneNodeRoleLabel)
+			shouldUpdate = true
+		}
 		if !hasLabel(node.Labels, LegacyMasterNodeLabel) {
 			node.Labels[LegacyMasterNodeLabel] = ""
 			fmt.Printf("adding label %s=''\n", LegacyMasterNodeLabel)
