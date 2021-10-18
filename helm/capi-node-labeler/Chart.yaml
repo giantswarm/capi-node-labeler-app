@@ -5,4 +5,4 @@ appVersion: 0.0.1
 home: "https://github.com/giantswarm/capi-node-labeler-app"
 apiVersion: v1
 annotations:
-  application.giantswarm.io/team: "firecracker"
+  application.giantswarm.io/team: "phoenix"
