@@ -8,6 +8,7 @@ workflows:
     jobs:
       - architect/go-build:
           name: go-build
+          context: architect
           binary: capi-node-labeler-app
           filters:
             tags:
