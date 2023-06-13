@@ -1,13 +1,14 @@
 version: 2.1
 
 orbs:
-  architect: giantswarm/architect@4.6.0
+  architect: giantswarm/architect@4.29.0
 
 workflows:
   build:
     jobs:
       - architect/go-build:
           name: go-build
+          context: architect
           binary: capi-node-labeler-app
           filters:
             tags:
