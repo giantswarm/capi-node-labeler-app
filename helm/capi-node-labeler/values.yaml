@@ -8,7 +8,7 @@ project:
 image:
   name: "giantswarm/capi-node-labeler-app"
   tag: "[[ .Version ]]"
-  registry: "docker.io"
+  registry: "gsoci.azurecr.io"
 
 pod:
   user:
