@@ -15,3 +15,7 @@ pod:
     id: 1000
   group:
     id: 1000
+
+global:
+  podSecurityStandards:
+    enforced: true
