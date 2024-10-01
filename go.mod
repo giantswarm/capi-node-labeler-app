@@ -2,7 +2,7 @@ module github.com/giantswarm/capi-node-labeler-app
 
 go 1.22.0
 
-toolchain go1.23.1
+toolchain go1.23.2
 
 require (
 	k8s.io/api v0.31.1
