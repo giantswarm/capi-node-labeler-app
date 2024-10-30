@@ -22,15 +22,23 @@ workflows:
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore:
+                - main
+                - master
 
       - architect/push-to-app-catalog:
-          context: "architect"
+          context: architect
           name: push-capi-node-labeler-app-to-app-catalog
-          app_catalog: "default-catalog"
-          app_catalog_test: "default-test-catalog"
-          chart: "capi-node-labeler"
+          app_catalog: default-catalog
+          app_catalog_test: default-test-catalog
+          chart: capi-node-labeler
           requires:
             - push-to-registries
           filters:
             tags:
               only: /^v.*/
+            branches:
+              ignore:
+                - main
+                - master
