@@ -1,8 +1,15 @@
+apiVersion: v2
 name: capi-node-labeler
-version: [[ .Version ]]
 description: "CAPI node labeler"
-appVersion: 0.0.1
+version: 0.0.1-dev
+appVersion: 0.0.1-dev
 home: "https://github.com/giantswarm/capi-node-labeler-app"
-apiVersion: v1
+icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 annotations:
   application.giantswarm.io/team: "phoenix"
+  config.giantswarm.io/version: 1.x.x
+  ui.giantswarm.io/logo: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
+restrictions:
+  clusterSingleton: true
+  fixedNamespace: kube-system
+  gpuInstances: false
