@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Go: Update `go.mod` and `.nancy-ignore`. ([#123](https://github.com/giantswarm/capi-node-labeler-app/pull/123))
+
 ## [0.5.0] - 2024-01-29
 
 ### Changed
