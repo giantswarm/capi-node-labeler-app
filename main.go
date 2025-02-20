@@ -20,6 +20,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/signal"
+	"syscall"
 
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -138,9 +140,12 @@ func main() {
 	fmt.Printf("capi-node-labeler finished successfully\n")
 	fmt.Printf("sleeping forever\n")
 
-	select {
-	// sleeping forever
-	}
+	// Don't try select {} here, it will cause the following error:
+	//
+	// fatal error: all goroutines are asleep - deadlock!
+	exit := make(chan os.Signal, 1)
+	signal.Notify(exit, syscall.SIGINT, syscall.SIGTERM)
+	<-exit
 }
 
 func hasLabel(labels map[string]string, labelName string) bool {
