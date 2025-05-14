@@ -86,7 +86,7 @@ func main() {
 
 	shouldUpdate := false
 	// check if the node is worker or master
-	if isControlPlaneNode(node, ctrlClient) {
+	if isControlPlaneNode(ctx, node, ctrlClient) {
 		// master node
 		if !hasLabel(node.Labels, MasterNodeRoleLabel) {
 			node.Labels[MasterNodeRoleLabel] = ""
@@ -182,7 +182,7 @@ func hasTaint(taints []v1.Taint, taintKey string) bool {
 	return false
 }
 
-func isControlPlaneNode(node v1.Node, ctrlClient client.Client) bool {
+func isControlPlaneNode(ctx context.Context, node v1.Node, ctrlClient client.Client) bool {
 	if hasLabel(node.Labels, MasterNodeRoleLabel) || hasLabel(node.Labels, ControlPlaneNodeRoleLabel) || hasLabel(node.Labels, LegacyMasterNodeLabel) {
 		return true
 	}
@@ -190,14 +190,14 @@ func isControlPlaneNode(node v1.Node, ctrlClient client.Client) bool {
 	// if node doesn't have any of the control plane labels, check if it has control plane Pods running as fallback.
 	// During DR scenarios, the node may not have any of the control plane labels but may still be a control plane node.
 	var apiPods v1.PodList
-	err := ctrlClient.List(context.TODO(), &apiPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "kube-apiserver", "tier": "control-plane"})
+	err := ctrlClient.List(ctx, &apiPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "kube-apiserver", "tier": "control-plane"})
 	if err != nil {
 		fmt.Printf("ERROR: failed to list api-server Pods in kube-system namespace\n")
 		panic(err)
 	}
 
 	var etcdPods v1.PodList
-	err = ctrlClient.List(context.TODO(), &etcdPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "etcd", "tier": "control-plane"})
+	err = ctrlClient.List(ctx, &etcdPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "etcd", "tier": "control-plane"})
 	if err != nil {
 		fmt.Printf("ERROR: failed to list etcd Pods in kube-system namespace\n")
 		panic(err)
