@@ -42,6 +42,8 @@ const (
 	LegacyWorkerNodeLabel = "node.kubernetes.io/worker"
 
 	LegacyRoleLabel = "kubernetes.io/role"
+
+	ControlPlaneNodeTaint = "node-role.kubernetes.io/control-plane"
 )
 
 var (
@@ -84,8 +86,7 @@ func main() {
 
 	shouldUpdate := false
 	// check if the node is worker or master
-	// master will already have the label set, worker wont
-	if hasLabel(node.Labels, MasterNodeRoleLabel) || hasLabel(node.Labels, ControlPlaneNodeRoleLabel) {
+	if isControlPlaneNode(node, ctrlClient) {
 		// master node
 		if !hasLabel(node.Labels, MasterNodeRoleLabel) {
 			node.Labels[MasterNodeRoleLabel] = ""
@@ -105,6 +106,25 @@ func main() {
 		if !hasLabel(node.Labels, LegacyRoleLabel) {
 			node.Labels[LegacyRoleLabel] = "master"
 			fmt.Printf("adding label %s='master'\n", LegacyRoleLabel)
+			shouldUpdate = true
+		}
+		if hasLabel(node.Labels, WorkerNodeRoleLabel) {
+			delete(node.Labels, WorkerNodeRoleLabel)
+			fmt.Printf("removing label %s\n", WorkerNodeRoleLabel)
+			shouldUpdate = true
+		}
+		if hasLabel(node.Labels, LegacyWorkerNodeLabel) {
+			delete(node.Labels, LegacyWorkerNodeLabel)
+			fmt.Printf("removing label %s\n", LegacyWorkerNodeLabel)
+			shouldUpdate = true
+		}
+
+		if !hasTaint(node.Spec.Taints, ControlPlaneNodeTaint) {
+			node.Spec.Taints = append(node.Spec.Taints, v1.Taint{
+				Key:    ControlPlaneNodeTaint,
+				Effect: v1.TaintEffectNoSchedule,
+			})
+			fmt.Printf("adding taint %s=''\n", ControlPlaneNodeTaint)
 			shouldUpdate = true
 		}
 	} else {
@@ -151,4 +171,46 @@ func main() {
 func hasLabel(labels map[string]string, labelName string) bool {
 	_, ok := labels[labelName]
 	return ok
+}
+
+func hasTaint(taints []v1.Taint, taintKey string) bool {
+	for _, taint := range taints {
+		if taint.Key == taintKey {
+			return true
+		}
+	}
+	return false
+}
+
+func isControlPlaneNode(node v1.Node, ctrlClient client.Client) bool {
+	if hasLabel(node.Labels, MasterNodeRoleLabel) || hasLabel(node.Labels, ControlPlaneNodeRoleLabel) || hasLabel(node.Labels, LegacyMasterNodeLabel) {
+		return true
+	}
+
+	// if node doesn't have any of the control plane labels, check if it has control plane Pods running as fallback.
+	// During DR scenarios, the node may not have any of the control plane labels but may still be a control plane node.
+	var apiPods v1.PodList
+	err := ctrlClient.List(context.TODO(), &apiPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "kube-apiserver", "tier": "control-plane"})
+	if err != nil {
+		fmt.Printf("ERROR: failed to list api-server Pods in kube-system namespace\n")
+		panic(err)
+	}
+
+	var etcdPods v1.PodList
+	err = ctrlClient.List(context.TODO(), &etcdPods, client.InNamespace("kube-system"), client.MatchingLabels{"component": "etcd", "tier": "control-plane"})
+	if err != nil {
+		fmt.Printf("ERROR: failed to list etcd Pods in kube-system namespace\n")
+		panic(err)
+	}
+
+	var cpPods v1.PodList
+	cpPods.Items = append(apiPods.Items, etcdPods.Items...)
+
+	for _, pod := range cpPods.Items {
+		if pod.Spec.NodeName == node.Name {
+			return true
+		}
+	}
+
+	return false
 }
