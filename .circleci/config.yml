@@ -9,6 +9,7 @@ workflows:
       - architect/go-build:
           name: go-build
           context: architect
+          resource_class: large
           binary: capi-node-labeler-app
           filters:
             tags:
