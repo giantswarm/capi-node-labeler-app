@@ -1,8 +1,10 @@
+apiVersion: v2
 name: capi-node-labeler
-version: [[ .Version ]]
+version: 1.1.6-dev
+appVersion: 1.1.6-dev
 description: "CAPI node labeler"
-appVersion: 0.0.1
 home: "https://github.com/giantswarm/capi-node-labeler-app"
-apiVersion: v1
+icon: https://s.giantswarm.io/app-icons/giantswarm/1/dark.svg
 annotations:
   application.giantswarm.io/team: "phoenix"
+  io.giantswarm.application.team: "phoenix"

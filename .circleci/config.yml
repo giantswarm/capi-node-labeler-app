@@ -30,6 +30,7 @@ workflows:
 
       - architect/push-to-app-catalog:
           context: architect
+          executor: app-build-suite
           name: push-capi-node-labeler-app-to-app-catalog
           app_catalog: default-catalog
           app_catalog_test: default-test-catalog

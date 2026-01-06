@@ -24,7 +24,7 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: spec.nodeName
-          image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ include "image.tag" . }}"
           imagePullPolicy: IfNotPresent
       priorityClassName: system-node-critical
       serviceAccountName: {{ include "resource.default.name" . }}
