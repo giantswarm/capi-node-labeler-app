@@ -2,12 +2,9 @@ name: capi-node-labeler-app
 namespace: kube-system
 serviceType: managed
 
-project:
-  branch: "[[ .Branch ]]"
-  commit: "[[ .SHA ]]"
 image:
   name: "giantswarm/capi-node-labeler-app"
-  tag: "[[ .Version ]]"
+  tag: ""
   registry: "gsoci.azurecr.io"
 
 pod:
@@ -15,6 +12,30 @@ pod:
     id: 1000
   group:
     id: 1000
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 64Mi
 
 global:
   podSecurityStandards:
